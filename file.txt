@@ -1,0 +1,107 @@
+//Declaración de los leds, según el PIN al que se encuentren conectados
+
+//LEDs para semáforo vehicular
+int CarRed=7;
+int CarYellow=6;
+int CarGreen=5;
+
+//LED para indicar que se está realizando el cambio de luces
+int White=4;
+
+//LEDs para semáforo peatonal
+int WalkRed=3;
+int WalkGreen=2;
+
+
+//Declaración del pulsador para realizar el cambio del semáforo
+int WalkButtom=1;
+
+//Variable de estado para verificar si es posible presionar el pulsador
+int State=0;
+
+
+//Función para inicializar el programa, con las varibles, pines,...
+//Se ejecuta una única vez, al iniciar o reiniciar el programa
+void setup() {
+  //Establece los LEDs como salidas
+  pinMode(CarGreen, OUTPUT);
+  pinMode(CarYellow, OUTPUT);
+  pinMode(CarRed, OUTPUT);
+  pinMode(White, OUTPUT);
+  pinMode(WalkGreen, OUTPUT);
+  pinMode(WalkRed, OUTPUT);
+
+
+  //Inicializa los LEDs apagados
+  digitalWrite(CarYellow,LOW);
+  digitalWrite(CarRed,LOW);
+  digitalWrite(WalkGreen, LOW);
+  
+  
+
+  //Establece el pulsador como una entrada
+  pinMode(WalkButtom, INPUT);
+
+  //Inicializa los LEDs encendidos
+  digitalWrite(CarGreen,HIGH);
+  digitalWrite(WalkRed,HIGH);
+  digitalWrite(White,HIGH);
+
+}
+
+//Función que se estará ejecutando de manera repetida al correr el programa
+void loop(){ 
+  //Establece el valor del pulsador a la variable State. Este valor puede ser pulsado o sin pulsar
+  State=digitalRead(WalkButtom);  
+  //Verifica si el valor de State es HIGH, lo que indica que el botón fue presionado
+  if (State==HIGH){
+    //Realiza una llamada a la función GreenLight
+    GreenLight();
+  }
+}
+
+
+//Función donde se realiza el cambio de luces necesario para mostrar el funcionamiento del semáforo 
+void GreenLight(){
+  //Apaga el LED blanco, indicando que se va a realizar un cambio de luces
+  digitalWrite(White, LOW);
+  //Se hace una espera de 5 segundos antes de continuar
+  delay(5000);
+
+  //Se apaga el LED vehicular verde y se enciende el LED vehicular amarillo
+  digitalWrite(CarGreen,LOW);
+  digitalWrite(CarYellow,HIGH);
+  //Se hace una espera de 2 segundos antes de continuar
+  delay(2000);
+  
+  //Se apaga el LED vehicular amarillo y se enciende el LED vehicular rojo
+  digitalWrite(CarYellow,LOW);
+  digitalWrite(CarRed,HIGH);
+  //Se hace una espera de 1.5 segundos antes de continuar
+  delay(1500);
+  
+  //Se apaga el LED peatonal rojo y se enciende el LED peatonal verde
+  digitalWrite(WalkRed,LOW);
+  digitalWrite(WalkGreen,HIGH);
+  //Se hace una espera de 10 segundos antes de continuar
+  delay(10000);
+
+  //Ciclo utilizado para hecer parpadear al LED peatonal verde, un total de 3 veces
+  for (int i = 0; i < 3; i++) {
+    //Se apaga el LED peatonal verde
+    digitalWrite(WalkGreen,LOW);
+    //Se hace una espera de 1 segundo antes de continuar
+    delay(1000);
+    //Se enciende el LED peatonal verde
+    digitalWrite(WalkGreen,HIGH);
+    //Se hace una espera de 1 segundo antes de continuar
+    delay(1000);    
+  }  
+
+  //Se vuelve al estado inicial de los LEDs antes de presionar el pulsador
+  digitalWrite(WalkRed,HIGH);
+  digitalWrite(WalkGreen,LOW);
+  digitalWrite(CarRed,LOW);
+  digitalWrite(White,HIGH);
+  digitalWrite(CarGreen, HIGH);
+}
